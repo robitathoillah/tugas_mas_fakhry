@@ -5,6 +5,7 @@ class PrefService {
   final SharedPreferences _prefs;
 
   static const _kOpenCount = 'open_count';
+  static const _kDarkMode = 'is_dark_mode';
 
   static Future<PrefService> init() async {
     final prefs = await SharedPreferences.getInstance();
@@ -15,4 +16,10 @@ class PrefService {
 
   Future<void> increaseOpenCount() =>
       _prefs.setInt(_kOpenCount, openCount + 1);
+
+      // ---------- Tema ----------
+  bool get isDarkMode => _prefs.getBool(_kDarkMode) ?? false;
+
+  Future<void> setDarkMode(bool value) => _prefs.setBool(_kDarkMode, value);
 }
+
