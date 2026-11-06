@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'models/profile_data.dart';
 import 'pages/profile_page.dart';
 import 'services/pref_service.dart';
 
@@ -20,15 +21,23 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late final ValueNotifier<bool> _isDark =
       ValueNotifier(widget.prefs.isDarkMode);
+  late final ValueNotifier<ProfileData> _profile =
+      ValueNotifier(widget.prefs.profile);
 
   void _changeTheme(bool value) {
     _isDark.value = value;
     widget.prefs.setDarkMode(value);
   }
 
+  void _updateProfile(ProfileData newProfile) {
+    _profile.value = newProfile;
+    widget.prefs.saveProfile(newProfile);
+  }
+
   @override
   void dispose() {
     _isDark.dispose();
+    _profile.dispose();
     super.dispose();
   }
 
@@ -37,20 +46,27 @@ class _MyAppState extends State<MyApp> {
     return ValueListenableBuilder<bool>(
       valueListenable: _isDark,
       builder: (context, isDark, _) {
-        return MaterialApp(
-          title: 'Kartu Profil Digital',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(colorSchemeSeed: Colors.indigo),
-          darkTheme: ThemeData(
-            colorSchemeSeed: Colors.indigo,
-            brightness: Brightness.dark,
-          ),
-          themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-          home: ProfilePage(
-            prefs: widget.prefs,
-            isDark: isDark,
-            onThemeChanged: _changeTheme,
-          ),
+        return ValueListenableBuilder<ProfileData>(
+          valueListenable: _profile,
+          builder: (context, profile, _) {
+            return MaterialApp(
+              title: 'Kartu Profil Digital',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(colorSchemeSeed: Colors.indigo),
+              darkTheme: ThemeData(
+                colorSchemeSeed: Colors.indigo,
+                brightness: Brightness.dark,
+              ),
+              themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+              home: ProfilePage(
+                prefs: widget.prefs,
+                profile: profile,
+                isDark: isDark,
+                onThemeChanged: _changeTheme,
+                onProfileChanged: _updateProfile,
+              ),
+            );
+          },
         );
       },
     );

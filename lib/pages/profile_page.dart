@@ -1,26 +1,48 @@
 import 'package:flutter/material.dart';
 import '../models/profile_data.dart';
 import '../services/pref_service.dart';
+import 'edit_profile_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({
     super.key,
     required this.prefs,
+    required this.profile,
     required this.isDark,
     required this.onThemeChanged,
+    required this.onProfileChanged,
   });
 
   final PrefService prefs;
+  final ProfileData profile;
   final bool isDark;
   final ValueChanged<bool> onThemeChanged;
+  final ValueChanged<ProfileData> onProfileChanged;
 
   @override
   Widget build(BuildContext context) {
-    const profile = ProfileData.defaults;
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Kartu Profil Digital')),
+      appBar: AppBar(
+        title: const Text('Kartu Profil Digital'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () async {
+              final result = await Navigator.push<ProfileData>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditProfilePage(initialProfile: profile),
+                ),
+              );
+              if (result != null) {
+                onProfileChanged(result);
+              }
+            },
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -33,13 +55,15 @@ class ProfilePage extends StatelessWidget {
                     radius: 40,
                     backgroundColor: colors.primaryContainer,
                     child: Text(
-                      profile.name[0].toUpperCase(),
+                      profile.name.isNotEmpty ? profile.name[0].toUpperCase() : 'U',
                       style: const TextStyle(fontSize: 32),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text(profile.name,
-                      style: Theme.of(context).textTheme.headlineSmall),
+                  Text(
+                    profile.name,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
                   const SizedBox(height: 4),
                   Text(profile.title),
                   const SizedBox(height: 12),

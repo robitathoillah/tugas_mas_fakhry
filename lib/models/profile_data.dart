@@ -15,4 +15,18 @@ class ProfileData {
     title: 'Software Engineer & Dosen',
     bio: 'Suka membangun aplikasi mobile dan berbagi ilmu.',
   );
+
+  // Konversi Objek ke Map/JSON
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'title': title,
+        'bio': bio,
+      };
+
+  // Konversi Map/JSON ke Objek
+  factory ProfileData.fromJson(Map<String, dynamic> json) => ProfileData(
+        name: json['name'] ?? 'Fakhry Firdaus',
+        title: json['title'] ?? 'Software Engineer & Dosen',
+        bio: json['bio'] ?? 'Suka membangun aplikasi mobile dan berbagi ilmu.',
+      );
 }
