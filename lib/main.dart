@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'models/profile_data.dart';
 import 'pages/profile_page.dart';
 import 'services/pref_service.dart';
+import 'services/database_helper.dart'; // Import DatabaseHelper untuk SQLite
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,11 +28,17 @@ class _MyAppState extends State<MyApp> {
   void _changeTheme(bool value) {
     _isDark.value = value;
     widget.prefs.setDarkMode(value);
+    
+    // Catat ke SQLite saat mode gelap diubah
+    DatabaseHelper.instance.insertLog('Mengubah pengaturan mode gelap');
   }
 
   void _updateProfile(ProfileData newProfile) {
     _profile.value = newProfile;
     widget.prefs.saveProfile(newProfile);
+    
+    // Catat ke SQLite saat profil diperbarui
+    DatabaseHelper.instance.insertLog('Memperbarui data profil');
   }
 
   @override

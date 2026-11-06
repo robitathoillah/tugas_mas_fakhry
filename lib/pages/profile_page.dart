@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/profile_data.dart';
 import '../services/pref_service.dart';
 import 'edit_profile_page.dart';
+import 'history_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({
@@ -27,8 +28,21 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Kartu Profil Digital'),
         actions: [
+          // Tombol untuk membuka Riwayat Aktivitas SQLite
+          IconButton(
+            icon: const Icon(Icons.list_alt),
+            tooltip: 'Riwayat Aktivitas',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HistoryPage()),
+              );
+            },
+          ),
+          // Tombol untuk Edit Profil
           IconButton(
             icon: const Icon(Icons.edit),
+            tooltip: 'Edit Profil',
             onPressed: () async {
               final result = await Navigator.push<ProfileData>(
                 context,
